@@ -16,30 +16,30 @@ class CheckinHistory extends Component {
         }
         return _.map(checkin_history, entry => {
             return (
-                <li>
+                <li key={entry.client_id}>
                     <img src={`${imgStorage}${entry.client_profile_pic}`} alt="User Image" />
-                    <a class="users-list-name" href="#">{entry.client_name}</a>
-                    <span class="users-list-date">Today</span>
+                    <a className="users-list-name" href="#">{entry.client_name}</a>
+                    <span className="users-list-date">{entry.date}</span>
                 </li>
             );
         });
     }
     render() {
         return(
-            <div class="row">
-            <div class="col-sm-4">
-                <div class="box box-danger">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Latest Members</h3>
-                    </div>
+            <div className="row">
+                <div className="col-md-4">
+                    <div className="box box-danger">
+                        <div className="box-header with-border">
+                            <h3 className="box-title">Latest Members</h3>
+                        </div>
 
-                    <div class="box-body no-padding">
-                        <ul class="users-list clearfix">
-                            { this.renderCheckinEntry() }
-                        </ul>
+                        <div className="box-body no-padding">
+                            <ul className="users-list clearfix">
+                                { this.renderCheckinEntry() }
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
             </div>
         );
     }
