@@ -15,9 +15,10 @@ class CheckinHistory extends Component {
             return <div>Loading...</div>
         }
         return _.map(checkin_history, entry => {
+            var client_status = entry.state == 1? "login-active-client" : "login-debtor-client"
             return (
                 <li key={entry.client_id}>
-                    <img src={`${imgStorage}${entry.client_profile_pic}`} alt="User Image" />
+                    <img className={client_status} src={`${imgStorage}${entry.client_profile_pic}`} alt="User Image" />
                     <a className="users-list-name" href="#">{entry.client_name}</a>
                     <span className="users-list-date">{entry.date}</span>
                 </li>
