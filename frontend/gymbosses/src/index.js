@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Login from './components/login'
 import Dashboard from './components/dashboard'
+import NewClient from './components/new_client'
 import reducers from './reducers';
 import promise from 'redux-promise';
 
@@ -16,6 +17,7 @@ ReactDOM.render(
     <BrowserRouter>
       <div>
         <Switch>
+          <Route path="/:gymName/dashboard/client/new" component={NewClient} />
           <Route path="/:gymName/dashboard" component={Dashboard} />
           <Route path="/" component={Login} />
         </Switch>

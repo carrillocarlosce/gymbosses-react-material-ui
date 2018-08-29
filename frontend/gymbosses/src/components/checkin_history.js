@@ -18,8 +18,8 @@ class CheckinHistory extends Component {
             var client_status = entry.state == 1? "login-active-client" : "login-debtor-client"
             return (
                 <li key={entry.client_id}>
-                    <img className={client_status} src={`${imgStorage}${entry.client_profile_pic}`} alt="User Image" />
-                    <a className="users-list-name" href="#">{entry.client_name}</a>
+                    <img className={client_status} src={`${imgStorage}${entry.profile_pic}`} alt="User Image" />
+                    <a className="users-list-name" href="#">{entry.name}</a>
                     <span className="users-list-date">{entry.date}</span>
                 </li>
             );
