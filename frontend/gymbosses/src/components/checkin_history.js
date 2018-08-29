@@ -15,12 +15,18 @@ class CheckinHistory extends Component {
             return <div>Loading...</div>
         }
         return _.map(checkin_history, entry => {
-            var client_status = entry.state == 1? "login-active-client" : "login-debtor-client"
+            var checkin_history_icon = entry.state == 1? "fa fa-check bg-green" : "fa fa-bomb bg-red"
             return (
                 <li key={entry.client_id}>
-                    <img className={client_status} src={`${imgStorage}${entry.profile_pic}`} alt="User Image" />
-                    <a className="users-list-name" href="#">{entry.name}</a>
-                    <span className="users-list-date">{entry.date}</span>
+                <i className={checkin_history_icon}></i>
+                <div className="timeline-item">
+                    <span className="time"><i className="far fa-clock"></i> {entry.date}</span>
+
+                    <h3 className="timeline-header">
+                        <img className="checkin-history-item" src={`${imgStorage}${entry.profile_pic}`} alt="User Image" />
+                        <a href="#">{`${entry.name} ${entry.last_name}`}</a>
+                    </h3>
+                </div>
                 </li>
             );
         });
@@ -28,14 +34,14 @@ class CheckinHistory extends Component {
     render() {
         return(
             <div className="row">
-                <div className="col-md-4">
+                <div className="col-md-6">
                     <div className="box box-danger">
                         <div className="box-header with-border">
                             <h3 className="box-title">Latest Members</h3>
                         </div>
 
                         <div className="box-body no-padding">
-                            <ul className="users-list clearfix">
+                            <ul className="timeline">
                                 { this.renderCheckinEntry() }
                             </ul>
                         </div>

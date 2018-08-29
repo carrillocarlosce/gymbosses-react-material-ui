@@ -1,7 +1,6 @@
-.login-active-client{
-    border: 2px solid darkolivegreen;
-}
-
-.login-debtor-client{
-    border: 2px solid indianred;
+.checkin-history-item{
+    border-radius: 50%;
+    max-width: 50px;
+    height: auto;
+    margin: 10px;
 }
