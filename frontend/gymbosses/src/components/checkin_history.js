@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchCheckinHistory } from '../actions';
+import { fetchCheckinHistory, FETCH_CLIENTS } from '../actions';
 
 class CheckinHistory extends Component {
     componentDidMount() {
@@ -10,11 +10,11 @@ class CheckinHistory extends Component {
 
     renderCheckinEntry() {
         const imgStorage = 'https://s3-sa-east-1.amazonaws.com/gymappuy/';
-        const { checkin_history } = this.props;
-        if (!checkin_history) {
+        const { clients } = this.props;
+        if (!clients) {
             return <div>Loading...</div>
         }
-        return _.map(checkin_history, entry => {
+        return _.map(clients, entry => {
             var checkin_history_icon = entry.state == 1? "fa fa-check bg-green" : "fa fa-bomb bg-red"
             return (
                 <li key={entry.client_id}>
@@ -56,6 +56,6 @@ class CheckinHistory extends Component {
 }
 
 function mapStateToProps(state){
-    return {checkin_history: state.checkin_history};
+    return {clients: state.clients};
 }
 export default connect(mapStateToProps, { fetchCheckinHistory })(CheckinHistory);
