@@ -24,9 +24,9 @@ class CheckinHistory extends Component {
 
                     <h3 className="timeline-header">
                         <div className="timeline-header-image">
-                        <img className="checkin-history-item" src={`${imgStorage}${entry.profile_pic}`} alt="User Image" />
+                        <img className="round-image-item" src={`${imgStorage}${entry.profile_pic}`} alt="User Image" />
                         </div>
-                        <a href="#">{`${entry.name} ${entry.last_name}`}</a>
+                        <a href={`clients/${entry.client_id}`}>{`${entry.name} ${entry.last_name}`}</a>
                     </h3>
                 </div>
                 </li>

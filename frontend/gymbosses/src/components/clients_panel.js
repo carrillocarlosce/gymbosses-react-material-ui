@@ -4,9 +4,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'; 
 import { fetchClients } from '../actions';
 
+
 class ClientsPanel extends Component {
     componentDidMount(){
         this.props.fetchClients('someGym', '');
+    }
+
+    navigateTo(e, id){
+        this.props.history.push('clients/'+id);
     }
     renderClient() {
         const { clients } = this.props;
@@ -33,7 +38,7 @@ class ClientsPanel extends Component {
                     break;
             }   
             return (
-                <tr key={client.client_id}>
+                <tr key={client.client_id} onClick={(e) => this.navigateTo(e, client.client_id)}>
                     <td> {client.client_id} </td>
                     <td> {`${client.name} ${client.last_name}`} </td>
                     <td><span className={`label ${state_style}`}> { state } </span></td>

@@ -4,10 +4,28 @@
     height: 50px;
     margin: 10px;
     overflow: hidden;
+    position: relative;
 }
-.checkin-history-item {
+.round-image-item {
+    position: absolute;
     width: 100%;
     height: auto;
+    top: -9999px;
+    bottom: -9999px;
+    left: -9999px;
+    right: -9999px;
+    margin: auto;
+}
+
+.clients-panel-profileimg-container {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 3px solid #d2d6de;
+    overflow: hidden;
+    position: relative;
 }
 
 .clients-panel-search-input{
@@ -17,4 +35,24 @@
     z-index: 2;
     float: left;
     margin-bottom: 0;
+}
+
+.box-body-centered {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding: 10px;
+    text-align: center;
+}
+
+.text-muted-12{
+    font-size:12px;
+    color: #818a91;
+}
+
+.btn-inline {
+    margin: 5%;
+    position: relative;
+    width: 40%;
 }
