@@ -1,8 +1,11 @@
 import { combineReducers } from 'redux';
-import ClientsReducer from './reducer_clients';
+import clientsReducer from './reducer_clients';
+import checkinReducer from './reducer_checkin';
 import { reducer as formReducer } from 'redux-form';
+
 const rootReducer = combineReducers({
-  clients: ClientsReducer,
+  clients: clientsReducer,
+  checkin: checkinReducer,
   form: formReducer
 });
 

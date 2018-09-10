@@ -19,8 +19,8 @@
 
 .clients-panel-profileimg-container {
     border-radius: 50%;
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     margin-left: auto;
     margin-right: auto;
     border: 3px solid #d2d6de;
@@ -55,4 +55,15 @@
     margin: 5%;
     position: relative;
     width: 40%;
+}
+
+.success {
+    color: #00a65a;
+}
+
+.clients-panel-checkin-time {
+    color:#999;
+    float:left;
+    padding:10px;
+    font-size:12px
 }

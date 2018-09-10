@@ -7,8 +7,8 @@ export const CREATE_CLIENT='create_client';
 
 const ROOT_URL="http://localhost:3000"
 
-export function fetchCheckinHistory(gym_name) {
-    const request = axios.get(`${ROOT_URL}/${gym_name}/checkin-history`);
+export function fetchCheckinHistory(gym_name, client_id) {
+    const request = axios.get(`${ROOT_URL}/${gym_name}/checkin-history?id=${client_id}`);
    
     return {
         type: FETCH_CHECKIN_HISTORY,
