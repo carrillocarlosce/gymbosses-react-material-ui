@@ -1,0 +1,15 @@
+sudo: false
+
+language: go
+  go:
+    - "1.10"
+
+before_install:
+  - cd backend
+
+deploy:
+  provider: heroku
+  app: gogymbosses
+  api_key:
+    secure: VPxLrP6RA3V94NhK66JIae/NsqKA7oYFgSrA2E7JBC7eWd1dtBbLug5CuzUwCHoJEzAyjBev11PaCz/4fBK5S8tMnmEOVxZ7x24E+tVRz71ReqLrnAOTl34ccTaB4v8nwJikeSGHkPU5Ydu1OYGqQvzQAvMYsoJRLk1Nc4nXTiXnrU2kZKUukUnMoxmHaTGQ5QEg6jQPKbfkDP3ULGcitq2wfmuwOptvI/ExJcZIngksSMT8+IqpZOr/PlSmePnbrrZDDvzVr/GA/QoZWEhj30NM3RHbKjShQ2nASNaRt/JXhL667NPt9vdDK6bdQb7hXRUmMpc/39/7HoB7S4DRvQRolfdkZOw+BokW9PyQfbaC9CP5HrkqWsrpnw13gHMWEQZ0IWGCKkJZOSg6lF7ma0ZyH7A7xKSOkY7BVQf57nYFwcxdAXIsZ9R9FXnyxiG/XEyJ2OJGNVn5dw+HFKYHoAj6+I76Hm5zmL0Uk/UmhQSzjyKQJmELncq+5U2dpu3FqedUAgeCBJ6fBel2c4ptjkt0MNV771+J0QBjlAbPCgFU7+5jOyywDLi/MVI/gH8Knfr15j6A2SFXjuTvsQaSUWpZh8OulL/88BEhzkfQ1ncpgDsZsbi0pkqyHEUGqF9mo6Mn+Cf4scLxVzf8ie/5J+y4z+LLX9tCUVHb2DMhUaw=
+  
