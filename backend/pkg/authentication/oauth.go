@@ -33,7 +33,7 @@ type OauthResponse struct {
 
 func NewOauthSrv() *OauthSrv {
 	oauthConfig := &oauth2.Config{
-		RedirectURL:  "http://localhost:3000/callback",
+		RedirectURL:  "https://gymbosses.herokuapp.com/callback",
 		ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
 		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.email"},

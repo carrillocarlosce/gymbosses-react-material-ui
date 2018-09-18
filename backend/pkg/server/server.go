@@ -44,7 +44,7 @@ func (s *Server) oauthCallback(w http.ResponseWriter, r *http.Request) {
 	//pending decide either to store or not the user
 	_, _ = s.userSrv.IsExistingUser(userInfo.Email)
 
-	http.Redirect(w, r, "http://localhost:8080/someGym/dashboard/", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "https://gymbosses-frontend.herokuapp.com/someGym/dashboard/", http.StatusTemporaryRedirect)
 }
 
 func (s *Server) login(w http.ResponseWriter, r *http.Request) {
