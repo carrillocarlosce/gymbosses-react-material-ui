@@ -3,7 +3,7 @@ go:
   - "1.10"
 
 before_install:
-  - cd backend
+  - cd server
 
 deploy:
   provider: heroku

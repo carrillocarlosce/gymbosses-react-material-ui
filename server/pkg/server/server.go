@@ -6,9 +6,9 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/agparadiso/gymbosses/backend/pkg/authentication"
-	"github.com/agparadiso/gymbosses/backend/pkg/clients"
-	"github.com/agparadiso/gymbosses/backend/pkg/users"
+	"github.com/agparadiso/gymbosses/server/pkg/authentication"
+	"github.com/agparadiso/gymbosses/server/pkg/clients"
+	"github.com/agparadiso/gymbosses/server/pkg/users"
 	"github.com/rs/cors"
 
 	"github.com/gorilla/mux"
@@ -24,14 +24,30 @@ func NewServer(userSrv users.UserSrv, oauthSrv *authentication.OauthSrv, clients
 	fmt.Println("Running gymbosses server...")
 	s := &Server{userSrv: userSrv, oauthSrv: *oauthSrv, clientSrv: clientsSrv}
 	r := mux.NewRouter()
-	r.HandleFunc(`/`, s.login)
-	r.HandleFunc(`/callback`, s.oauthCallback)
-	r.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/checkin-history`, s.checkinHistory)
-	r.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients`, s.clients)
-	r.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/new`, s.newClient)
-	r.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/{client_id:[0-9=\-\/]+}`, s.client)
+	api := r.PathPrefix("/api/v1/").Subrouter()
+	api.HandleFunc(`/`, s.login)
+	api.HandleFunc(`/callback`, s.oauthCallback)
+	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/checkin-history`, s.checkinHistory)
+	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients`, s.clients)
+	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/new`, s.newClient)
+	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/{client_id:[0-9=\-\/]+}`, s.client)
+
+	// Serve static assets directly.
+	fs := http.FileServer(http.Dir("../client/static"))
+	r.PathPrefix(`/static`).Handler(http.StripPrefix("/static", fs))
+
+	r.PathPrefix(`/`).HandlerFunc(IndexHandler("../client/index.html"))
+
 	handler := cors.Default().Handler(r)
 	return handler
+}
+
+func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request) {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, entrypoint)
+	}
+
+	return http.HandlerFunc(fn)
 }
 
 func (s *Server) oauthCallback(w http.ResponseWriter, r *http.Request) {

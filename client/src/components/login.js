@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 export default class Login extends Component {
     authlogin(){
-        fetch('http://localhost:3000/')
+        fetch('http://localhost:3000/api/v1/')
         .then((response) => response.json())
         .then((responseJson) => {
             window.location=responseJson.url;
