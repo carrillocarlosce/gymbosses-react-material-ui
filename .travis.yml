@@ -7,6 +7,13 @@ before_install:
 - npm run build
 - cd ..
 
+addons:
+  artifacts: 
+    paths: 
+      - client/static/bundle.js
+    target_paths:
+      - static/
+
 deploy:
   provider: heroku
   app: gymbosses
