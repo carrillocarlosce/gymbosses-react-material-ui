@@ -3,7 +3,7 @@ package mock
 import (
 	"encoding/json"
 
-	"github.com/agparadiso/gymbosses/backend/pkg/clients"
+	"github.com/agparadiso/gymbosses/server/pkg/clients"
 	"github.com/davecgh/go-spew/spew"
 )
 
