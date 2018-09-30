@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/agparadiso/gymbosses/server/pkg/authentication"
+	"github.com/agparadiso/gymbosses/pkg/authentication"
 
-	clients "github.com/agparadiso/gymbosses/server/pkg/clients/mock"
-	"github.com/agparadiso/gymbosses/server/pkg/server"
-	users "github.com/agparadiso/gymbosses/server/pkg/users/mock"
+	clients "github.com/agparadiso/gymbosses/pkg/clients/mock"
+	"github.com/agparadiso/gymbosses/pkg/server"
+	users "github.com/agparadiso/gymbosses/pkg/users/mock"
 )
 
 func main() {

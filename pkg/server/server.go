@@ -6,9 +6,9 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/agparadiso/gymbosses/server/pkg/authentication"
-	"github.com/agparadiso/gymbosses/server/pkg/clients"
-	"github.com/agparadiso/gymbosses/server/pkg/users"
+	"github.com/agparadiso/gymbosses/pkg/authentication"
+	"github.com/agparadiso/gymbosses/pkg/clients"
+	"github.com/agparadiso/gymbosses/pkg/users"
 	"github.com/rs/cors"
 
 	"github.com/gorilla/mux"
@@ -33,10 +33,10 @@ func NewServer(userSrv users.UserSrv, oauthSrv *authentication.OauthSrv, clients
 	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/{client_id:[0-9=\-\/]+}`, s.client)
 
 	// Serve static assets directly.
-	fs := http.FileServer(http.Dir("../client/static"))
+	fs := http.FileServer(http.Dir("client/static"))
 	r.PathPrefix(`/static`).Handler(http.StripPrefix("/static", fs))
 
-	r.PathPrefix(`/`).HandlerFunc(IndexHandler("../client/index.html"))
+	r.PathPrefix(`/`).HandlerFunc(IndexHandler("client/index.html"))
 
 	handler := cors.Default().Handler(r)
 	return handler

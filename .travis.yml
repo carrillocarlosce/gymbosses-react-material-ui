@@ -2,7 +2,11 @@ language: go
 go:
 - '1.10'
 before_install:
-- cd server
+- cd client
+- npm install
+- npm run build
+- cd ..
+
 deploy:
   provider: heroku
   app: gymbosses
