@@ -10,6 +10,8 @@ addons:
       - client/static/bundle.js
     target_paths:
       - /static/
+    permissions:
+      - public-read
 
 deploy:
   provider: heroku
