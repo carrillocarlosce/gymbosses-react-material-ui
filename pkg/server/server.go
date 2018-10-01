@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/agparadiso/gymbosses/pkg/authentication"
 	"github.com/agparadiso/gymbosses/pkg/clients"
@@ -31,6 +32,11 @@ func NewServer(userSrv users.UserSrv, oauthSrv *authentication.OauthSrv, clients
 	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients`, s.clients)
 	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/new`, s.newClient)
 	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/{client_id:[0-9=\-\/]+}`, s.client)
+
+	// skip getting bundle.js from s3 if it's development
+	if bundlejsURL := os.Getenv("BUNDLEJS_URL"); bundlejsURL != "" {
+		r.PathPrefix(`/static/bundle.js`).Handler(http.RedirectHandler(bundlejsURL, 301))
+	}
 
 	// Serve static assets directly.
 	fs := http.FileServer(http.Dir("client/static"))
