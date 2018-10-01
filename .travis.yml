@@ -2,17 +2,14 @@ language: go
 go:
 - '1.10'
 before_install:
-- cd client
-- npm install
-- npm run build
-- cd ..
+- make build-client-deploy
 
 addons:
   artifacts: 
     paths: 
       - client/static/bundle.js
     target_paths:
-      - static/
+      - /static/
 
 deploy:
   provider: heroku
