@@ -13,7 +13,6 @@ class ClientProfile extends Component {
     }
 
     render() {
-        const imgStorage = 'https://s3-sa-east-1.amazonaws.com/gymappuy/';
         const {client, checkin} = this.props;
         if (!client || !checkin) {
             return (<div>Loading...</div>);
@@ -21,7 +20,7 @@ class ClientProfile extends Component {
         return (
             <div>
                 <div className="row">
-                    <ClientProfileHeader client={client} imgStorage={imgStorage} />
+                    <ClientProfileHeader client={client} />
                 </div>
                 <div className="row">
                     <ClientProfilePayments />
