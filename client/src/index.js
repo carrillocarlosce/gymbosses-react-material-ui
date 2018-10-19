@@ -8,12 +8,11 @@ import Login from './components/login';
 import Dashboard from './components/dashboard';
 import NewClient from './components/new_client';
 import ClientsPanel from './components/clients_panel';
-import ClientProfile from './components/client_profile';
+import ClientProfile from './containers/client_profile';
 import reducers from './reducers';
 import promise from 'redux-promise';
 
 const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
-
 ReactDOM.render(
   <Provider store={createStoreWithMiddleware(reducers)}>
     <BrowserRouter>
