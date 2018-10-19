@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 
 export default class ClientProfileHeader extends Component {
     render(){
-        const { client, imgStorage } = this.props;
+        const imgStorage = 'https://s3-sa-east-1.amazonaws.com/gymappuy/';
+        const { client } = this.props;
+        
         return(
             <div className="col-md-12">
                 <div className="box box-widget widget-user">
