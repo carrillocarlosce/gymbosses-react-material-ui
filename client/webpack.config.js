@@ -1,5 +1,4 @@
 module.exports = {
-    "mode": "production",
     "entry": "./src/index.js",
     "output": {
         "path": __dirname+'/static',
@@ -23,6 +22,7 @@ module.exports = {
     },
     devServer: {
       historyApiFallback: true,
+      publicPath:'/static/',
       contentBase: './',
       watchOptions: {
         aggregateTimeout: 300,
