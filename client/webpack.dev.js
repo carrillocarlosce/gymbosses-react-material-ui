@@ -1,26 +1,8 @@
+const merge = require('webpack-merge');
+const common = require('./webpack.common.js');
 var webpack = require('webpack');
-module.exports = {
-    "entry": "./src/index.js",
-    "output": {
-        "path": __dirname+'/static',
-        "filename": "bundle.js"
-    },
-    "module": {
-        "rules": [
-            {
-                "test": /\.js$/,
-                "exclude": /node_modules/,
-                "use": {
-                    "loader": "babel-loader",
-                    "options": {
-                        "presets": [
-                            "@babel/preset-react"
-                        ]
-                    }
-                }
-            }
-        ]
-    },
+
+module.exports = merge(common, {
     devServer: {
       historyApiFallback: true,
       publicPath:'/static/',
@@ -32,7 +14,7 @@ module.exports = {
     },
     plugins: [
         new webpack.EnvironmentPlugin({
-            HOST_URL: 'http://localhost:3000' // use 'localhost' unless process.env.HOST_URL is defined
+            HOST_URL: 'http://localhost:3000'
         })
     ]
-};
+});
