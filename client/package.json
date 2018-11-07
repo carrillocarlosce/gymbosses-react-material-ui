@@ -5,8 +5,8 @@
   "main": "index.js",
   "repository": "git@github.com:agparadiso/go-gymbosses.git",
   "scripts": {
-    "build": "webpack --mode=production",
-    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "build": "webpack --mode=production --config webpack.prod.js",
+    "start": "webpack-dev-server --open --config webpack.dev.js",
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test",
     "test:watch": "npm run test -- --watch"
   },
