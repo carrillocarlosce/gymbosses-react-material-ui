@@ -11,12 +11,8 @@ build-client-deploy:
 	@echo 'Building client for deploy.'
 	cd client; npm install; npm run build
 
-build-client-local:
-	@echo 'Building client for local development.'
-	cd client; npm run build
-
 run-server:
 	@echo 'Running server.'
 	export `less .env | xargs`; go run cmd/gymbosses/main.go
 
-run-local: build-client-local run-server
+run-local: run-server
