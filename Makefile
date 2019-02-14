@@ -7,9 +7,9 @@ help:
 	@echo '    make run-server       		Runs only the server.'
 	@echo '    make run-local       		Runs the entire project in develpment.'
 
-build-client-local:
+run-client-local:
 	@echo 'Building client for local development.'
-	cd client; npm run build
+	cd client; npm start
 
 build-client-deploy:
 	@echo 'Building client for deploy.'
