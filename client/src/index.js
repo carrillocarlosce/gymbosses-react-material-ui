@@ -9,6 +9,7 @@ import DashboardContainer from "./containers/dashboard";
 import NewClientContainer from "./containers/new_client";
 import ClientsPanelContainer from "./containers/clients_panel_container";
 import ClientProfileContainer from "./containers/client_profile";
+import LandingContainer from "./containers/landing/landing";
 import reducers from "./reducers";
 import promise from "redux-promise";
 
@@ -31,10 +32,10 @@ ReactDOM.render(
             component={ClientsPanelContainer}
           />
           <Route path="/:gymName/dashboard" component={DashboardContainer} />
-          <Route path="/" component={Login} />
+          <Route path="/" component={LandingContainer} />
         </Switch>
       </div>
     </BrowserRouter>
   </Provider>,
-  document.querySelector(".container")
+  document.querySelector(".container-fluid")
 );
