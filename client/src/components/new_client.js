@@ -9,8 +9,8 @@ class NewClient extends Component {
     renderField(field, type) {
         const { meta: { touched, error } } = field;
         const className = `form-group ${touched && error ? 'has-danger' : ''}`;
-        return(
-            <div className={ className }>
+        return (
+            <div className={className}>
                 <label>{field.label}</label>
                 <input
                     className="form-control"
@@ -30,69 +30,69 @@ class NewClient extends Component {
         });
     }
 
-    render(){
+    render() {
         const { handleSubmit } = this.props;
         return (
             <div className="box box-primary">
                 <div className="box-header with-border">
                     <h3 className="box-title">Create a New Client</h3>
                 </div>
-                <form onSubmit={ handleSubmit(this.onSubmit.bind(this)) }>
+                <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
                     <div className="box-body">
                         <Field
-                        label="ID"
-                        name="id"
-                        component={this.renderField}
+                            label="ID"
+                            name="id"
+                            component={this.renderField}
                         />
                         <Field
-                        label="Name"
-                        name="name"
-                        component={this.renderField}
+                            label="Name"
+                            name="name"
+                            component={this.renderField}
                         />
                         <Field
-                        label="Last name"
-                        name="last_name"
-                        component={this.renderField}
+                            label="Last name"
+                            name="last_name"
+                            component={this.renderField}
                         />
                         <Field
-                        label="Birthdate"
-                        name="birthdate"
-                        component={this.renderField}
+                            label="Birthdate"
+                            name="birthdate"
+                            component={this.renderField}
                         />
                         <Field
-                        label="Gender"
-                        name="gender"
-                        component={this.renderField}
+                            label="Gender"
+                            name="gender"
+                            component={this.renderField}
                         />
                         <Field
-                        label="Email"
-                        name="email"
-                        component={this.renderField}
+                            label="Email"
+                            name="email"
+                            component={this.renderField}
                         />
                         <Field
-                        label="Phone"
-                        name="phone"
-                        component={this.renderField}
+                            label="Phone"
+                            name="phone"
+                            component={this.renderField}
                         />
                         <Field
-                        label="Emergency contact"
-                        name="emergency_contact"
-                        component={this.renderField}
+                            label="Emergency contact"
+                            name="emergency_contact"
+                            component={this.renderField}
                         />
                         <Field
-                        label="Diseases"
-                        name="diseases"
-                        component={this.renderField}
+                            label="Diseases"
+                            name="diseases"
+                            component={this.renderField}
                         />
                         <Field
-                        label="Profile pic"
-                        name="profile_pic"
-                        component={this.renderField}
+                            label="Profile pic"
+                            name="profile_pic"
+                            component={this.renderField}
                         />
                         <Field
-                        label="How did you meet us"
-                        name="meet_us"
-                        component={this.renderField}
+                            label="How did you meet us"
+                            name="meet_us"
+                            component={this.renderField}
                         />
                     </div>
                     <div className="box-footer">
@@ -105,7 +105,7 @@ class NewClient extends Component {
     }
 }
 
-function validate (values) {
+function validate(values) {
     const errors = {};
 
     if (!values.name) {

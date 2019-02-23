@@ -15,7 +15,7 @@ export default class LandingIntro extends Component {
                   control payments and access to your Gym.
                 </p>
                 <p>
-                  <a href="#" class="btn btn-primary btn-outline btn-md">
+                  <a href="/new_account" class="btn btn-primary btn-outline btn-md">
                     Free 30 days Trial
                   </a>{" "}
                   <a

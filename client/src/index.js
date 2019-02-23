@@ -5,6 +5,7 @@ import { createStore, applyMiddleware } from "redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import Login from "./components/login";
+import NewAccountContainer from "./containers/new_account";
 import DashboardContainer from "./containers/dashboard";
 import NewClientContainer from "./containers/new_client";
 import ClientsPanelContainer from "./containers/clients_panel_container";
@@ -32,6 +33,7 @@ ReactDOM.render(
             component={ClientsPanelContainer}
           />
           <Route path="/:gymName/dashboard" component={DashboardContainer} />
+          <Route path="/new_account" component={NewAccountContainer} />
           <Route path="/" component={LandingContainer} />
         </Switch>
       </div>
