@@ -5,55 +5,36 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 
+	"github.com/agparadiso/gymbosses/pkg/account"
 	"github.com/agparadiso/gymbosses/pkg/authentication"
 	"github.com/agparadiso/gymbosses/pkg/clients"
-	"github.com/agparadiso/gymbosses/pkg/users"
 	"github.com/rs/cors"
 
 	"github.com/gorilla/mux"
 )
 
 type Server struct {
-	userSrv   users.UserSrv
-	oauthSrv  authentication.OauthSrv
-	clientSrv clients.ClientsSrv
+	accountSrv account.AccountSrv
+	oauthSrv   authentication.OauthSrv
+	clientSrv  clients.ClientsSrv
 }
 
-func NewServer(userSrv users.UserSrv, oauthSrv *authentication.OauthSrv, clientsSrv clients.ClientsSrv) http.Handler {
+func NewServer(accountSrv account.AccountSrv, oauthSrv *authentication.OauthSrv, clientsSrv clients.ClientsSrv) http.Handler {
 	fmt.Println("Running gymbosses server...")
-	s := &Server{userSrv: userSrv, oauthSrv: *oauthSrv, clientSrv: clientsSrv}
+	s := &Server{accountSrv: accountSrv, oauthSrv: *oauthSrv, clientSrv: clientsSrv}
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api/v1/").Subrouter()
 	api.HandleFunc(`/`, s.login)
 	api.HandleFunc(`/callback`, s.oauthCallback)
+	api.HandleFunc(`/account/new`, s.newAccount)
 	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/checkin-history`, s.checkinHistory)
 	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients`, s.clients)
 	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/new`, s.newClient)
 	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/{client_id:[0-9=\-\/]+}`, s.client)
 
-	// skip getting bundle.js from s3 if it's development
-	if bundlejsURL := os.Getenv("BUNDLEJS_URL"); bundlejsURL != "" {
-		r.PathPrefix(`/static/bundle.js`).Handler(http.RedirectHandler(bundlejsURL, 301))
-	}
-
-	// Serve static assets directly.
-	fs := http.FileServer(http.Dir("client/static"))
-	r.PathPrefix(`/static`).Handler(http.StripPrefix("/static", fs))
-
-	r.PathPrefix(`/`).HandlerFunc(IndexHandler("client/index.html"))
-
 	handler := cors.Default().Handler(r)
 	return handler
-}
-
-func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request) {
-	fn := func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, entrypoint)
-	}
-
-	return http.HandlerFunc(fn)
 }
 
 func (s *Server) oauthCallback(w http.ResponseWriter, r *http.Request) {
@@ -64,7 +45,7 @@ func (s *Server) oauthCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//pending decide either to store or not the user
-	_, _ = s.userSrv.IsExistingUser(userInfo.Email)
+	_, _ = s.accountSrv.IsExistingAccount(userInfo.Email)
 
 	http.Redirect(w, r, "https://gymbosses.herokuapp.com/someGym/dashboard/", http.StatusTemporaryRedirect)
 }
@@ -118,4 +99,37 @@ func (s *Server) newClient(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf(err.Error())
 		return
 	}
+}
+
+func (s *Server) newAccount(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("newAccount")
+	type newAccountRequest struct {
+		Name     string `json:"name"`
+		Email    string `json:"email"`
+		Country  string `json:"country"`
+		Password string `json:"password"`
+		GymName  string `json:"gym_name"`
+	}
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Printf(err.Error())
+		return
+	}
+	defer r.Body.Close()
+	ar := newAccountRequest{}
+	err = json.Unmarshal(body, &ar)
+	if err != nil {
+		fmt.Printf(err.Error())
+		return
+	}
+
+	if ar.Name != "" && ar.Email != "" && ar.Country != "" && ar.Password != "" && ar.GymName != "" {
+		err := s.accountSrv.SignUp(ar.Name, ar.Email, ar.GymName, ar.Country, ar.Password)
+		if err != nil {
+			fmt.Printf(err.Error())
+			return
+		}
+	}
+
 }
