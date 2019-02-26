@@ -1,17 +1,18 @@
 import _ from 'lodash';
 import { Throttle } from 'react-throttle';
 import React, { Component } from 'react';
-import { connect } from 'react-redux'; 
+import { withRouter } from 'react-router'
+import { connect } from 'react-redux';
 import { fetchClients } from '../actions';
 
 
 class ClientsPanel extends Component {
-    componentDidMount(){
+    componentDidMount() {
         this.props.fetchClients('someGym', '');
     }
 
-    navigateTo(e, id){
-        this.props.history.push('clients/'+id);
+    navigateTo(e, id) {
+        this.props.history.push('clients/' + id);
     }
     renderClient() {
         const { clients } = this.props;
@@ -21,7 +22,7 @@ class ClientsPanel extends Component {
         }
 
         return _.map(clients, client => {
-            var state 
+            var state
             var state_style
             switch (client.state) {
                 case 0:
@@ -36,12 +37,12 @@ class ClientsPanel extends Component {
                     state = 'inactive';
                     state_style = 'label-warning';
                     break;
-            }   
+            }
             return (
                 <tr key={client.client_id} onClick={(e) => this.navigateTo(e, client.client_id)}>
                     <td> {client.client_id} </td>
                     <td> {`${client.name} ${client.last_name}`} </td>
-                    <td><span className={`label ${state_style}`}> { state } </span></td>
+                    <td><span className={`label ${state_style}`}> {state} </span></td>
                 </tr>
             );
         });
@@ -59,9 +60,9 @@ class ClientsPanel extends Component {
                             <h3 className="box-title">Search Client</h3>
 
                             <div className="box-tools">
-                                <div className="input-group input-group-sm" style={{width: '250px'}}>
+                                <div className="input-group input-group-sm" style={{ width: '250px' }}>
                                     <Throttle time="1000" handler="onChange">
-                                        <input onChange={ event => this.onChangeSearch(event.target.value) } type="text" name="table_search" className="form-control pull-right" placeholder="Search" />
+                                        <input onChange={event => this.onChangeSearch(event.target.value)} type="text" name="table_search" className="form-control pull-right" placeholder="Search" />
                                     </Throttle>
                                     <div className="input-group-btn">
                                         <button className="btn btn-default"><i className="fa fa-search"></i></button>
@@ -71,14 +72,14 @@ class ClientsPanel extends Component {
                         </div>
                         <div className="box-body table-responsive no-padding">
                             <table className="table table-hover">
-                            <tbody>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Status</th>
-                                </tr>
-                                { this.renderClient() }
-                            </tbody>
+                                <tbody>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    {this.renderClient()}
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -88,8 +89,8 @@ class ClientsPanel extends Component {
     }
 }
 
-function mapStateToProps(state){
-    return {clients: state.clients};
+function mapStateToProps(state) {
+    return { clients: state.clients };
 }
-        
-export default connect(mapStateToProps, { fetchClients })(ClientsPanel);
+
+export default withRouter(connect(mapStateToProps, { fetchClients })(ClientsPanel));
