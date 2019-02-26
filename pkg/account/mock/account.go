@@ -12,10 +12,6 @@ func NewAccountSrv(db *sql.DB) *AccountSrv {
 	}
 }
 
-func (srv *AccountSrv) IsExistingAccount(email string) (bool, error) {
-	return false, nil
-}
-
 func (srv *AccountSrv) SignUp(name, email, gymName, country, password string) error {
 	return nil
 }

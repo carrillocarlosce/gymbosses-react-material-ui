@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/agparadiso/gymbosses/pkg/account"
@@ -26,7 +27,6 @@ func NewServer(accountSrv account.AccountSrv, oauthSrv *authentication.OauthSrv,
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api/v1/").Subrouter()
 	api.HandleFunc(`/`, s.login)
-	api.HandleFunc(`/callback`, s.oauthCallback)
 	api.HandleFunc(`/account/new`, s.newAccount)
 	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/checkin-history`, s.checkinHistory)
 	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients`, s.clients)
@@ -35,19 +35,6 @@ func NewServer(accountSrv account.AccountSrv, oauthSrv *authentication.OauthSrv,
 
 	handler := cors.Default().Handler(r)
 	return handler
-}
-
-func (s *Server) oauthCallback(w http.ResponseWriter, r *http.Request) {
-	userInfo, err := s.oauthSrv.OauthCallback(w, r)
-	if err != nil {
-		fmt.Printf(err.Error())
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-		return
-	}
-	//pending decide either to store or not the user
-	_, _ = s.accountSrv.IsExistingAccount(userInfo.Email)
-
-	http.Redirect(w, r, "https://gymbosses.herokuapp.com/someGym/dashboard/", http.StatusTemporaryRedirect)
 }
 
 func (s *Server) login(w http.ResponseWriter, r *http.Request) {
@@ -102,7 +89,6 @@ func (s *Server) newClient(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) newAccount(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("newAccount")
 	type newAccountRequest struct {
 		Name     string `json:"name"`
 		Email    string `json:"email"`
@@ -113,23 +99,28 @@ func (s *Server) newAccount(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		fmt.Printf(err.Error())
+		log.Printf(err.Error())
 		return
 	}
 	defer r.Body.Close()
 	ar := newAccountRequest{}
 	err = json.Unmarshal(body, &ar)
 	if err != nil {
-		fmt.Printf(err.Error())
+		log.Printf(err.Error())
 		return
 	}
 
-	if ar.Name != "" && ar.Email != "" && ar.Country != "" && ar.Password != "" && ar.GymName != "" {
-		err := s.accountSrv.SignUp(ar.Name, ar.Email, ar.GymName, ar.Country, ar.Password)
-		if err != nil {
-			fmt.Printf(err.Error())
-			return
-		}
+	if ar.Name == "" || ar.Email == "" || ar.Country == "" || ar.Password == "" || ar.GymName == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Incomplete parameters")
+		return
+	}
+
+	err = s.accountSrv.SignUp(ar.Name, ar.Email, ar.GymName, ar.Country, ar.Password)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Println("Failed to SignUp: ", err.Error())
+		return
 	}
 
 }

@@ -15,6 +15,5 @@ type Account struct {
 }
 
 type AccountSrv interface {
-	IsExistingAccount(email string) (bool, error)
 	SignUp(name, email, gymName, country, password string) error
 }
