@@ -1,7 +1,10 @@
 import React, { Component } from "react";
+import Auth from '../../Auth/Auth.js';
+
 
 export default class LandingIntro extends Component {
   render() {
+    const auth = new Auth();
     return (
       <div class="colorlib-intro">
         <div class="container">
@@ -18,12 +21,11 @@ export default class LandingIntro extends Component {
                   <a href="/new_account" class="btn btn-primary btn-outline btn-md">
                     Free 30 days Trial
                   </a>{" "}
-                  <a
-                    href="/someGym/dashboard/"
+                  <button onClick={(e) => auth.login()}
                     class="btn btn-primary btn-outline btn-md"
                   >
                     Log in
-                  </a>
+                  </button>
                 </p>
               </div>
             </div>
