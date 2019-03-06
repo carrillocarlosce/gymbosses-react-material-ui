@@ -7,9 +7,12 @@ import (
 	"log"
 	"net/http"
 
+	jose "gopkg.in/square/go-jose.v2"
+
 	"github.com/agparadiso/gymbosses/pkg/account"
 	"github.com/agparadiso/gymbosses/pkg/authentication"
 	"github.com/agparadiso/gymbosses/pkg/clients"
+	"github.com/auth0-community/auth0"
 	"github.com/rs/cors"
 
 	"github.com/gorilla/mux"
@@ -28,10 +31,10 @@ func NewServer(accountSrv account.AccountSrv, oauthSrv *authentication.OauthSrv,
 	api := r.PathPrefix("/api/v1/").Subrouter()
 	api.HandleFunc(`/`, s.login)
 	api.HandleFunc(`/account/new`, s.newAccount)
-	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/checkin-history`, s.checkinHistory)
-	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients`, s.clients)
-	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/new`, s.newClient)
-	api.HandleFunc(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/{client_id:[0-9=\-\/]+}`, s.client)
+	api.Handle(`/{gymname:[a-zA-Z0-9=\-\/]+}/checkin-history`, authMiddleware(http.HandlerFunc(s.checkinHistory)))
+	api.Handle(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients`, authMiddleware(http.HandlerFunc(s.clients)))
+	api.Handle(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/new`, authMiddleware(http.HandlerFunc(s.newClient)))
+	api.Handle(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/{client_id:[0-9=\-\/]+}`, authMiddleware(http.HandlerFunc(s.client)))
 
 	handler := cors.Default().Handler(r)
 	return handler
@@ -122,5 +125,23 @@ func (s *Server) newAccount(w http.ResponseWriter, r *http.Request) {
 		log.Println("Failed to SignUp: ", err.Error())
 		return
 	}
+}
 
+func authMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var auth0Domain = "https://gymbosses.auth0.com/"
+		var audience = "6xwu89vXD1KZ592IJobbbZU1d2Wq5iUg"
+		client := auth0.NewJWKClient(auth0.JWKClientOptions{URI: auth0Domain + ".well-known/jwks.json"})
+		configuration := auth0.NewConfiguration(client, []string{audience}, auth0Domain, jose.RS256)
+		validator := auth0.NewValidator(configuration)
+
+		_, err := validator.ValidateRequest(r)
+
+		if err != nil {
+			log.Println(err)
+			log.Println("token is not valid")
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
 }
