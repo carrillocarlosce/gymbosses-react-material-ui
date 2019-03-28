@@ -4,7 +4,9 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
-import Login from "./components/login";
+import Callback from "./components/callback";
+import Home from "./components/home";
+
 import NewAccountContainer from "./containers/new_account";
 import DashboardContainer from "./containers/dashboard";
 import NewClientContainer from "./containers/new_client";
@@ -21,19 +23,21 @@ ReactDOM.render(
       <div class="hold-transition skin-black sidebar-mini">
         <Switch>
           <Route
-            path="/:gymName/dashboard/clients/new"
+            path="/:gymName/clients/new"
             component={NewClientContainer}
           />
           <Route
-            path="/:gymName/dashboard/clients/:id"
+            path="/:gymName/clients/:id"
             component={ClientProfileContainer}
           />
           <Route
-            path="/:gymName/dashboard/clients/"
+            path="/:gymName/clients/"
             component={ClientsPanelContainer}
           />
           <Route path="/:gymName/dashboard" component={DashboardContainer} />
           <Route path="/new_account" component={NewAccountContainer} />
+          <Route path="/callback" component={Callback} /> 
+          <Route path="/home" component={Home} /> 
           <Route path="/" component={LandingContainer} />
         </Switch>
       </div>

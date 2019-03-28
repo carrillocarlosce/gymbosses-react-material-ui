@@ -3,6 +3,8 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
+	"log"
+	"strings"
 
 	"github.com/agparadiso/gymbosses/pkg/account"
 	"github.com/pkg/errors"
@@ -53,6 +55,44 @@ func (srv *accountSrv) SignUp(name, email, gymName, country, password string) er
 	return nil
 }
 
+func (srv *accountSrv) ListGyms(email string) (*account.GymsResponse, error) {
+	var gymResponse account.GymsResponse
+	var accountID int
+	err := srv.db.QueryRow(fmt.Sprintf(getAccountByEmailQuery, email)).Scan(&accountID)
+	if err != nil {
+		return nil, errors.Wrap(err, "fail to get accountID")
+	}
+
+	var gymList []string
+	rows, err := srv.db.Query(fmt.Sprintf(getAccesibleGyms, accountID))
+	if err != nil {
+		return nil, errors.Wrap(err, "fail to get accesible Gyms")
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var gymID string
+		if err := rows.Scan(&gymID); err != nil {
+			log.Fatal(err)
+		}
+		gymList = append(gymList, gymID)
+	}
+
+	if len(gymList) > 0 {
+		rows, err := srv.db.Query(fmt.Sprintf(getGymsData, strings.Join(gymList, ",")))
+		if err != nil {
+			return nil, errors.Wrap(err, "fail to get gym data")
+		}
+		for rows.Next() {
+			var gym account.Gym
+			if err := rows.Scan(&gym.ID, &gym.Name); err != nil {
+				log.Fatal(err)
+			}
+			gymResponse = append(gymResponse, gym)
+		}
+	}
+	return &gymResponse, nil
+}
+
 const newAccountQuery = `
 INSERT INTO account(account_name, email, country, account_password)
 VALUES ('%s', '%s', '%s', '%s')
@@ -86,4 +126,13 @@ CREATE TABLE client_%d(
 	diseases VARCHAR (200) NOT NULL,
 	how_meet_us VARCHAR (200) NOT NULL
 );
+`
+const getAccesibleGyms = `
+SELECT gym_id FROM permissions_gym
+WHERE account_id = %d
+`
+
+const getGymsData = `
+SELECT id, gym_name FROM gym
+WHERE id in (%s)
 `

@@ -11,6 +11,7 @@ import (
 
 	"github.com/agparadiso/gymbosses/pkg/account"
 	"github.com/agparadiso/gymbosses/pkg/authentication"
+	"github.com/agparadiso/gymbosses/pkg/authorization"
 	"github.com/agparadiso/gymbosses/pkg/clients"
 	"github.com/auth0-community/auth0"
 	"github.com/rs/cors"
@@ -31,12 +32,13 @@ func NewServer(accountSrv account.AccountSrv, oauthSrv *authentication.OauthSrv,
 	api := r.PathPrefix("/api/v1/").Subrouter()
 	api.HandleFunc(`/`, s.login)
 	api.HandleFunc(`/account/new`, s.newAccount)
+	api.Handle(`/list-gyms`, authMiddleware(http.HandlerFunc(s.listGyms)))
 	api.Handle(`/{gymname:[a-zA-Z0-9=\-\/]+}/checkin-history`, authMiddleware(http.HandlerFunc(s.checkinHistory)))
 	api.Handle(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients`, authMiddleware(http.HandlerFunc(s.clients)))
 	api.Handle(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/new`, authMiddleware(http.HandlerFunc(s.newClient)))
 	api.Handle(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/{client_id:[0-9=\-\/]+}`, authMiddleware(http.HandlerFunc(s.client)))
 
-	handler := cors.Default().Handler(r)
+	handler := cors.AllowAll().Handler(r)
 	return handler
 }
 
@@ -127,13 +129,29 @@ func (s *Server) newAccount(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (s *Server) listGyms(w http.ResponseWriter, r *http.Request) {
+	var gyms *account.GymsResponse
+	email := authorization.ExtractAccountEmail(r.Header.Get("Authorization"))
+
+	gyms, err := s.accountSrv.ListGyms(email)
+	if err != nil {
+		fmt.Println("ERROR: ", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	body, _ := json.Marshal(gyms)
+	w.Write(body)
+}
+
 func authMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var auth0Domain = "https://gymbosses.auth0.com/"
 		var audience = "6xwu89vXD1KZ592IJobbbZU1d2Wq5iUg"
-		client := auth0.NewJWKClient(auth0.JWKClientOptions{URI: auth0Domain + ".well-known/jwks.json"})
+		client := auth0.NewJWKClient(auth0.JWKClientOptions{URI: auth0Domain + ".well-known/jwks.json"}, nil)
 		configuration := auth0.NewConfiguration(client, []string{audience}, auth0Domain, jose.RS256)
-		validator := auth0.NewValidator(configuration)
+		validator := auth0.NewValidator(configuration, nil)
 
 		_, err := validator.ValidateRequest(r)
 

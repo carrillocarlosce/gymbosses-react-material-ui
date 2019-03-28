@@ -15,3 +15,6 @@ func NewAccountSrv(db *sql.DB) *AccountSrv {
 func (srv *AccountSrv) SignUp(name, email, gymName, country, password string) error {
 	return nil
 }
+
+func (srv *AccountSrv) ListGyms() {
+}
