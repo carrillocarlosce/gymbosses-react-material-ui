@@ -5,7 +5,8 @@ import { fetchCheckinHistory } from '../actions';
 
 class CheckinHistory extends Component {
     componentDidMount() {
-        this.props.fetchCheckinHistory('someGym', '');
+        const { gym_id } = this.props;
+        this.props.fetchCheckinHistory(gym_id);
     }
 
     renderCheckinEntry() {
@@ -56,6 +57,6 @@ class CheckinHistory extends Component {
 }
 
 function mapStateToProps(state){
-    return {checkin: state.checkin};
+    return {checkin: state.checkin, gym_id: state.gym_id};
 }
 export default connect(mapStateToProps, { fetchCheckinHistory })(CheckinHistory);

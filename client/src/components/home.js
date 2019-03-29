@@ -1,12 +1,16 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { fetchGyms } from '../actions';
+import { fetchGyms, setGymID } from '../actions';
 
 class Home extends Component {
     componentDidMount() {
         this.props.fetchGyms();
+    }
+
+    navigateTo(id){
+        this.props.setGymID(id)
+        this.props.history.push(id + '/dashboard');
     }
 
     renderGymEntry() {
@@ -16,8 +20,8 @@ class Home extends Component {
         }
         return _.map(gyms, entry => {
             return (
-                <li key={entry.id}>
-                    <Link to={entry.id + "/dashboard"}> {entry.name} </Link>
+                <li key={entry.id} onClick={(e) => this.navigateTo(entry.id)}>
+                    {entry.name}
                 </li>
             );
         });
@@ -37,4 +41,4 @@ class Home extends Component {
 function mapStateToProps(state){
     return {gyms: state.gyms};
 }
-export default connect(mapStateToProps, { fetchGyms })(Home);
+export default connect(mapStateToProps, { fetchGyms, setGymID })(Home);

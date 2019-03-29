@@ -6,12 +6,13 @@ export const FETCH_CLIENT = 'fetch_client';
 export const CREATE_CLIENT = 'create_client';
 export const CREATE_ACCOUNT = 'create_account';
 export const FETCH_GYMS = 'fetch_gyms';
+export const SET_GYM_ID = 'set_gym_id';
 
 const ROOT_URL = process.env.HOST_URL + "/api/v1"
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('idToken')}`;
 
-export function fetchCheckinHistory(gym_name, client_id) {
-    const request = axios.get(`${ROOT_URL}/${gym_name}/checkin-history?id=${client_id}`);
+export function fetchCheckinHistory(gym_id) {
+    const request = axios.get(`${ROOT_URL}/${gym_id}/checkin-history`);
 
     return {
         type: FETCH_CHECKIN_HISTORY,
@@ -64,3 +65,9 @@ export function fetchGyms() {
     };
 };
 
+export function setGymID(gym_id) {
+    return {
+        type: SET_GYM_ID,
+        payload: gym_id
+    };
+};

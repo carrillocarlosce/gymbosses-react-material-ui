@@ -10,8 +10,6 @@ import (
 	jose "gopkg.in/square/go-jose.v2"
 
 	"github.com/agparadiso/gymbosses/pkg/account"
-	"github.com/agparadiso/gymbosses/pkg/authentication"
-	"github.com/agparadiso/gymbosses/pkg/authorization"
 	"github.com/agparadiso/gymbosses/pkg/clients"
 	"github.com/auth0-community/auth0"
 	"github.com/rs/cors"
@@ -21,35 +19,38 @@ import (
 
 type Server struct {
 	accountSrv account.AccountSrv
-	oauthSrv   authentication.OauthSrv
 	clientSrv  clients.ClientsSrv
 }
 
-func NewServer(accountSrv account.AccountSrv, oauthSrv *authentication.OauthSrv, clientsSrv clients.ClientsSrv) http.Handler {
+func NewServer(accountSrv account.AccountSrv, clientsSrv clients.ClientsSrv) http.Handler {
 	fmt.Println("Running gymbosses server...")
-	s := &Server{accountSrv: accountSrv, oauthSrv: *oauthSrv, clientSrv: clientsSrv}
+	s := &Server{accountSrv: accountSrv, clientSrv: clientsSrv}
 	r := mux.NewRouter()
 	api := r.PathPrefix("/api/v1/").Subrouter()
-	api.HandleFunc(`/`, s.login)
 	api.HandleFunc(`/account/new`, s.newAccount)
 	api.Handle(`/list-gyms`, authMiddleware(http.HandlerFunc(s.listGyms)))
-	api.Handle(`/{gymname:[a-zA-Z0-9=\-\/]+}/checkin-history`, authMiddleware(http.HandlerFunc(s.checkinHistory)))
-	api.Handle(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients`, authMiddleware(http.HandlerFunc(s.clients)))
-	api.Handle(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/new`, authMiddleware(http.HandlerFunc(s.newClient)))
-	api.Handle(`/{gymname:[a-zA-Z0-9=\-\/]+}/clients/{client_id:[0-9=\-\/]+}`, authMiddleware(http.HandlerFunc(s.client)))
+	api.Handle(`/{gymID:[0-9=\-\/]+}/checkin-history`, authMiddleware(http.HandlerFunc(s.checkinHistory)))
+	api.Handle(`/{gymID:[0-9=\-\/]+}/clients`, authMiddleware(http.HandlerFunc(s.clients)))
+	api.Handle(`/{gymID:[0-9=\-\/]+}/clients/new`, authMiddleware(http.HandlerFunc(s.newClient)))
+	api.Handle(`/{gymID:[0-9=\-\/]+}/clients/{client_id:[0-9=\-\/]+}`, authMiddleware(http.HandlerFunc(s.client)))
 
 	handler := cors.AllowAll().Handler(r)
 	return handler
 }
 
-func (s *Server) login(w http.ResponseWriter, r *http.Request) {
-	s.oauthSrv.LoginGoogleProvider(w, r)
-}
-
 func (s *Server) checkinHistory(w http.ResponseWriter, r *http.Request) {
-	cliID := r.URL.Query().Get("id")
+	vars := mux.Vars(r)
+	valid, err := s.accountSrv.ValidatePermissions(r.Header.Get("Authorization"), vars["gymID"])
+	if !valid {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+	}
 	var ckh *clients.CheckinHistoryResponse
-	ckh = s.clientSrv.CheckinHistory(cliID)
+	ckh = s.clientSrv.CheckinHistory(vars["gymID"])
 	w.Header().Set("Content-Type", "application/json")
 	body, _ := json.Marshal(ckh)
 	w.Write(body)
@@ -123,7 +124,7 @@ func (s *Server) newAccount(w http.ResponseWriter, r *http.Request) {
 
 	err = s.accountSrv.SignUp(ar.Name, ar.Email, ar.GymName, ar.Country, ar.Password)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
 		log.Println("Failed to SignUp: ", err.Error())
 		return
 	}
@@ -131,9 +132,7 @@ func (s *Server) newAccount(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) listGyms(w http.ResponseWriter, r *http.Request) {
 	var gyms *account.GymsResponse
-	email := authorization.ExtractAccountEmail(r.Header.Get("Authorization"))
-
-	gyms, err := s.accountSrv.ListGyms(email)
+	gyms, err := s.accountSrv.ListGyms(r.Header.Get("Authorization"))
 	if err != nil {
 		fmt.Println("ERROR: ", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
