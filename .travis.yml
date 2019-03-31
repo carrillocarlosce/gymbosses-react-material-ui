@@ -1,16 +1,16 @@
 language: go
 go:
 - '1.11'
-before_install:
-- make build-client-deploy
-addons:
-  artifacts:
-    paths:
-    - client/static/bundle.js
-    target_paths:
-    - "/static/"
-    permissions:
-    - public-read
+# before_install:
+# - make build-client-deploy
+# addons:
+#   artifacts:
+#     paths:
+#     - client/static/bundle.js
+#     target_paths:
+#     - "/static/"
+#     permissions:
+#     - public-read
 deploy:
   provider: heroku
   app: gymbosses
