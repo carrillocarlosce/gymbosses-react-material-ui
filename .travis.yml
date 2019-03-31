@@ -1,18 +1,8 @@
 language: go
 go:
 - '1.11'
-# before_install:
-# - make build-client-deploy
-# addons:
-#   artifacts:
-#     paths:
-#     - client/static/bundle.js
-#     target_paths:
-#     - "/static/"
-#     permissions:
-#     - public-read
 deploy:
   provider: heroku
   app: gymbosses
   api_key:
-    secure: TuTND2u6T8iFbGGJNbOMh0yl1Cqj8IPBjycJYb5SajKHXGocouueDv7JxtOK+PyCANvgYo7jt8kBezyfWOSHxGvBvwps8J97a3TGhdXgmC5Aq/GZwjVtzeRSOzX8IuX4rXkhe+ZEWrSf2y2cmetuzMd4KbtJRjgrauwxVEm93Oa6idMTOVAPHHjUexgLI8E3FvrCkURVfM9GeQId5WlPXcUldzdhEWzN7DrP0lYWAtTFba8TuKi7vyUhUDBg1/lHO9H9SQKsvMSY3WYbxN8enN/E0mzSXVb5iFTJfUSZBOJYFJs4qhjuzKIh+U5QTIdUUuZVtmvrZUKZppdLDhEcgi4UgoNTU1BPoF3Q3ijZFipP1oZDZAoXjjAikIWaH6e3+4ju5XdeLSW9ooM1TVjxwBTeWsYsp1SJjc9iS31nycRGrbjmQLiqzQwOau/JgeZMFxs65ITUVv+DvpE+sO/HeiSGBZa5Y4EDq2brLYHo+OU86dIkGKyjFu8ScNNyqyXMJKrKPiLAg8aT5GTRbBIcCf36Wk1mhjrgBa/FH5zugVBvpGAJU9Lsugebdfz5xiB6IEi1dCOH9bxD8a2aq8rbiWJwYBURKG6YJ/h+afKOQ3eGV5vnimg6hfIEZAUQOirLd7H1EHnZD8eCru1RpKAe1/wZHjdcKy96FyqmBXiqT1E=
+    secure: NZ61hvF4yQFAj8wfEX1QncYgo4GlbBBqrmDJGcdP4FSYInbjveEwHOj5YttvTK3meqxpFHYBA9gDes8xgnEx7RK8+3gT1/6uBnrzcdJ3YLTfDWLAPMCpch0IEF44xtA4TKJqV55NWLAAWgh89rBBrNTwVT3nVVCJqJ8Zi3FjfkawxRwl5FisirLVGGb9oQk8Ke743JdbUtl0KreaN3e1hJfpcHSCEpqeMr/i6vevzTnVSBVJXWjKhR+mnDMVokdJGXo+SYmKys92Uu8tmkklPvSF8ejS8kiKJnzcgcvnzpq2xysuXAiV+4ufDNxtjgnvu0I2SGVeUikn/u250Rd5luLUf+aRm7je4v+eL3qE5/8XHIefFE4RitxUw/lNDCZVuT2YzLBe4+JYE0NvlX+LdVYefoysr541EJIyAWhPw02XPo4Bjz2UmRnsJcjGjWTNZHqMf9coEqiApkdAV2FlmlluIWVChDxnL82STvvrxKVSW85dIuvUUOkKQVDZQHPqSdn9bqmLCRsKNjMWn+fscKmL1NGQ9i/jq/azsiiqo9CmorIntTA63ywW9zpit2Wkft/u/BEJ66eTvvgRILD+qAz329yvEh73xOv8j6uJBDXG9H5D5UKc89HRoAXg1r74du63IK83ws4dgdEY6oX7rZyJyCVdqdniCZxc/CL3o6M=
