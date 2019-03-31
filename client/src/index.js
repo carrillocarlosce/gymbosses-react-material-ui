@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import {loadState, saveState } from './persister/localstorage';
+import throttle from 'lodash/throttle';
 
 import Callback from "./components/callback";
 import Home from "./components/home";
@@ -20,29 +21,29 @@ import promise from "redux-promise";
 const persistedState = loadState();
 const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 const store = createStoreWithMiddleware(reducers, persistedState);
-store.subscribe(() => {
+store.subscribe(throttle(() => {
   saveState({
     gym_id: store.getState().gym_id
   });
-});
+}), 1000);
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <div class="hold-transition skin-black sidebar-mini">
         <Switch>
           <Route
-            path="/:gymName/clients/new"
+            path="/clients/new"
             component={NewClientContainer}
           />
           <Route
-            path="/:gymName/clients/:id"
+            path="/clients/:id"
             component={ClientProfileContainer}
           />
           <Route
-            path="/:gymName/clients/"
+            path="/clients/"
             component={ClientsPanelContainer}
           />
-          <Route path="/:gymName/dashboard" component={DashboardContainer} />
+          <Route path="/dashboard" component={DashboardContainer} />
           <Route path="/new_account" component={NewAccountContainer} />
           <Route path="/callback" component={Callback} /> 
           <Route path="/home" component={Home} /> 

@@ -10,7 +10,7 @@ class Home extends Component {
 
     navigateTo(id){
         this.props.setGymID(id)
-        this.props.history.push(id + '/dashboard');
+        this.props.history.push('/dashboard');
     }
 
     renderGymEntry() {

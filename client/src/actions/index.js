@@ -20,8 +20,8 @@ export function fetchCheckinHistory(gym_id) {
     };
 }
 
-export function fetchClients(gym_name, client_name) {
-    const request = axios.get(`${ROOT_URL}/${gym_name}/clients?name=${client_name}`);
+export function fetchClients(gym_id, client_name) {
+    const request = axios.get(`${ROOT_URL}/${gym_id}/clients?name=${client_name}`);
 
     return {
         type: FETCH_CLIENTS,
@@ -29,8 +29,8 @@ export function fetchClients(gym_name, client_name) {
     };
 }
 
-export function fetchClient(gym_name, client_id) {
-    const request = axios.get(`${ROOT_URL}/${gym_name}/clients/${client_id}`);
+export function fetchClient(gym_id, client_id) {
+    const request = axios.get(`${ROOT_URL}/${gym_id}/clients/${client_id}`);
 
     return {
         type: FETCH_CLIENT,
@@ -38,8 +38,8 @@ export function fetchClient(gym_name, client_id) {
     };
 }
 
-export function createClient(gym_name, values, callback) {
-    const request = axios.post(`${ROOT_URL}/${gym_name}/clients/new`, values)
+export function createClient(gym_id, values, callback) {
+    const request = axios.post(`${ROOT_URL}/${gym_id}/clients/new`, values)
         .then(() => callback());
     return {
         type: CREATE_CLIENT,
