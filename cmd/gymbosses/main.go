@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/agparadiso/gymbosses/pkg/authentication"
 	_ "github.com/lib/pq"
 
 	account "github.com/agparadiso/gymbosses/pkg/account/postgres"
@@ -22,7 +21,6 @@ func main() {
 	defer db.Close()
 
 	accountSrv := account.NewAccountSrv(db)
-	oauthSrv := authentication.NewOauthSrv()
 	clientsSrv := clients.NewClientsSrv()
-	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), server.NewServer(accountSrv, oauthSrv, clientsSrv)))
+	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), server.NewServer(accountSrv, clientsSrv)))
 }

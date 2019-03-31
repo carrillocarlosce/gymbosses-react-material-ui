@@ -10,8 +10,9 @@ import ClientProfileCheckin from "../components/client_profile_checkin";
 
 class ClientProfileContainer extends Component {
   componentDidMount() {
-    this.props.fetchClient("someGym", "5892");
-    this.props.fetchCheckinHistory("someGym", "5892");
+    const { gym_id } = this.props;
+    this.props.fetchClient(gym_id, "5892");
+    this.props.fetchCheckinHistory(gym_id, "5892");
   }
 
   render() {
@@ -49,7 +50,7 @@ class ClientProfileContainer extends Component {
 }
 
 function mapStateToProps(state) {
-  return { client: state.clients, checkin: state.checkin };
+  return { client: state.clients, checkin: state.checkin, gym_id: state.gym_id };
 }
 export default connect(
   mapStateToProps,

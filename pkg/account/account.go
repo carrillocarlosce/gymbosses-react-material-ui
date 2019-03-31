@@ -5,6 +5,8 @@ type Gym struct {
 	Name string `json:"name"`
 }
 
+type GymsResponse []Gym
+
 type Account struct {
 	ID       string `json:"id"`
 	Name     string `json:"name"`
@@ -16,4 +18,6 @@ type Account struct {
 
 type AccountSrv interface {
 	SignUp(name, email, gymName, country, password string) error
+	ListGyms(authToken string) (*GymsResponse, error)
+	ValidatePermissions(authToken, gymID string) (bool, error)
 }

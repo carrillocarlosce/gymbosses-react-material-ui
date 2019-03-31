@@ -8,7 +8,8 @@ import { fetchClients } from '../actions';
 
 class ClientsPanel extends Component {
     componentDidMount() {
-        this.props.fetchClients('someGym', '');
+        const { gym_id } = this.props;
+        this.props.fetchClients( gym_id, '');
     }
 
     navigateTo(e, id) {
@@ -90,7 +91,7 @@ class ClientsPanel extends Component {
 }
 
 function mapStateToProps(state) {
-    return { clients: state.clients };
+    return { clients: state.clients, gym_id: state.gym_id };
 }
 
 export default withRouter(connect(mapStateToProps, { fetchClients })(ClientsPanel));
