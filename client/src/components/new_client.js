@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createClient } from '../actions';
-
 
 class NewClient extends Component {
     renderField(field, type) {
@@ -25,8 +24,9 @@ class NewClient extends Component {
     }
 
     onSubmit(values) {
-        this.props.createClient('someGym', values, () => {
-            this.props.history.push('/someGym/dashboard');
+        const { gym_id } = this.props;
+        this.props.createClient(gym_id, values, () => {
+            this.props.history.push('/dashboard');
         });
     }
 
@@ -123,9 +123,13 @@ function validate(values) {
     return errors
 }
 
-export default reduxForm({
+function mapStateToProps(state){
+    return { gym_id: state.gym_id };
+}
+
+export default withRouter(reduxForm({
     validate,
     form: 'NewClientForm'
 })(
-    connect(null, { createClient })(NewClient)
-);
+    connect(mapStateToProps, { createClient })(NewClient)
+));

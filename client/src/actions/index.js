@@ -47,7 +47,7 @@ export function createClient(gym_id, values, callback) {
     };
 }
 
-export function createAccount(gym_name, values, callback) {
+export function createAccount(values, callback) {
     const request = axios.post(`${ROOT_URL}/account/new`, values)
         .then(() => callback());
     return {

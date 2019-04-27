@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createAccount } from '../actions';
+import Auth from '../Auth/Auth.js';
 
 class NewAccount extends Component {
   renderField(field) {
@@ -24,8 +25,9 @@ class NewAccount extends Component {
   }
 
   onSubmit(values) {
-    this.props.createAccount('someGym', values, () => {
-      this.props.history.push('/someGym/dashboard');
+    const auth = new Auth();
+    this.props.createAccount(values, () => {
+      auth.login();
     });
   }
 
@@ -116,9 +118,9 @@ function validate(values) {
   return errors
 }
 
-export default reduxForm({
+export default withRouter(reduxForm({
   validate,
   form: 'NewAccountForm'
 })(
   connect(null, { createAccount })(NewAccount)
-);
+));

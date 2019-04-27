@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 
 	jose "gopkg.in/square/go-jose.v2"
 
@@ -122,12 +123,13 @@ func (s *Server) newAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = s.accountSrv.SignUp(ar.Name, ar.Email, ar.GymName, ar.Country, ar.Password)
+	err = s.accountSrv.SignUp(ar.Name, strings.ToLower(ar.Email), ar.GymName, ar.Country, ar.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Println("Failed to SignUp: ", err.Error())
 		return
 	}
+	w.WriteHeader(http.StatusCreated)
 }
 
 func (s *Server) listGyms(w http.ResponseWriter, r *http.Request) {
