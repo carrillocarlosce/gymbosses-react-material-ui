@@ -4,7 +4,7 @@ export default class Auth {
   auth0 = new auth0.WebAuth({
     domain: 'gymbosses.auth0.com',
     clientID: '6xwu89vXD1KZ592IJobbbZU1d2Wq5iUg',
-    redirectUri: 'http://domineering-degree.surge.sh/callback',
+    redirectUri: 'http://gymbosses.com/callback',
     responseType: 'token id_token',
     scope: 'openid profile'
   });
