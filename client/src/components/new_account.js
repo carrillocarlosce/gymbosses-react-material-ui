@@ -4,6 +4,23 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createAccount } from '../actions';
 import Auth from '../Auth/Auth.js';
+import TextField from '@material-ui/core/TextField'
+
+const renderTextField = ({
+  label,
+  input,
+  meta: { touched, invalid, error },
+  ...custom
+}) => (
+  <TextField
+    label={label}
+    placeholder={label}
+    error={touched && invalid}
+    helperText={touched && error}
+    {...input}
+    {...custom}
+  />
+)
 
 class NewAccount extends Component {
   renderField(field) {
@@ -34,48 +51,62 @@ class NewAccount extends Component {
   render() {
     const { handleSubmit } = this.props;
     return (
-      <div className="box box-primary">
-        <div className="box-header with-border">
-          <h3 className="box-title">Create a New Account</h3>
+      <div>
+        <div>
+          <h3>Create a New Account</h3>
         </div>
         <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
-          <div className="box-body">
+          <div>
             <Field
               label="Hey What's your full name?"
               name="name"
-              component={this.renderField}
+              component={renderTextField}
+              fullWidth
             />
+          </div>
+          <div>
             <Field
               label="Which Country are you from?"
               name="country"
-              component={this.renderField}
+              component={renderTextField}
             />
+          </div>
+          <div>
             <Field
               label="What's your email"
               name="email"
-              component={this.renderField}
+              component={renderTextField}
             />
+          </div>
+          <div>
             <Field
-              label="Enter the password for your user (Must contain UPPER and lowercase letters, numbers, and total lenght of 8 digits)"
+              label="Enter the password"
               name="password"
               type="password"
-              component={this.renderField}
+              component={renderTextField}
+              fullWidth
             />
+          </div>
+          <div>
             <Field
               label="Confirm the password"
               name="confirm_password"
               type="password"
-              component={this.renderField}
+              component={renderTextField}
             />
+          </div>
+          <div>
             <Field
               label="Cool, now what's the name of the Gym?"
               name="gym_name"
-              component={this.renderField}
+              component={renderTextField}
             />
+          </div>
+          <div>
             <Field
               label="How did you meet us?"
               name="how_meet_us"
-              component={this.renderField}
+              component={renderTextField}
             />
           </div>
           <div className="box-footer">
