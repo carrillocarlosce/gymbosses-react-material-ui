@@ -1,14 +1,41 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { Link, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { createAccount } from '../actions';
-import Auth from '../Auth/Auth.js';
+import { Link } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import FitnessCenter from '@material-ui/icons/FitnessCenter';
+
+
+const useStyles = makeStyles(theme => ({
+  '@global': {
+    body: {
+      backgroundColor: theme.palette.common.white,
+    },
+  },
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
 
 const renderTextField = ({
   label,
@@ -26,23 +53,23 @@ const renderTextField = ({
   />
 )
 
-class NewAccount extends Component {
-  onSubmit(values) {
-    const auth = new Auth();
-    this.props.createAccount(values, () => {
-      auth.login();
-    });
-  }
+const AdapterLink = React.forwardRef((props, ref) => <Link innerRef={ref} {...props} />);
 
-  render() {
-    const { handleSubmit } = this.props;
-    return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
+let NewAccount = props => {
+  const { handleSubmit } = props;
+  const classes = useStyles();
+
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <FitnessCenter />
+        </Avatar>
         <Typography component="h3" variant="h5">
           Sign up
         </Typography>
-        <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+        <form className={classes.form} onSubmit={handleSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Field
@@ -109,15 +136,33 @@ class NewAccount extends Component {
               fullWidth
             />
           </Grid>
-          <div className="box-footer">
-            <button type="submit" className="btn btn-primary">Submit</button>
-            <Link to="/" className="btn btn-danger">Cancel</Link>
-          </div>
+          <Grid item xs={6}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign Up
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            <Button 
+              component={AdapterLink} to="/"
+              fullWidth
+              variant="contained"
+              color="secondary"
+              className={classes.submit}
+              >
+              Cancel
+            </Button>
+          </Grid>
         </Grid>
         </form>
-      </Container>
-    );
-  }
+      </div>
+    </Container>
+  );
 }
 
 function validate(values) {
@@ -150,9 +195,7 @@ function validate(values) {
   return errors
 }
 
-export default withRouter(reduxForm({
-  validate,
-  form: 'NewAccountForm'
-})(
-  connect(null, { createAccount })(NewAccount)
-));
+export default reduxForm({
+    validate,
+    form: 'NewAccountForm'
+  })(NewAccount)
