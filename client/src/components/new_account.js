@@ -5,6 +5,10 @@ import { connect } from 'react-redux';
 import { createAccount } from '../actions';
 import Auth from '../Auth/Auth.js';
 import TextField from '@material-ui/core/TextField'
+import Grid from '@material-ui/core/Grid';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
 
 const renderTextField = ({
   label,
@@ -23,24 +27,6 @@ const renderTextField = ({
 )
 
 class NewAccount extends Component {
-  renderField(field) {
-    const { meta: { touched, error } } = field;
-    const className = `form-group ${touched && error ? 'has-danger' : ''}`;
-    return (
-      <div className={className}>
-        <label>{field.label}</label>
-        <input
-          className="form-control"
-          type={field.type}
-          {...field.input}
-        />
-        <div className="text-help">
-          {touched ? error : ''}
-        </div>
-      </div>
-    );
-  }
-
   onSubmit(values) {
     const auth = new Auth();
     this.props.createAccount(values, () => {
@@ -51,70 +37,85 @@ class NewAccount extends Component {
   render() {
     const { handleSubmit } = this.props;
     return (
-      <div>
-        <div>
-          <h3>Create a New Account</h3>
-        </div>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Typography component="h3" variant="h5">
+          Sign up
+        </Typography>
         <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
-          <div>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
             <Field
               label="Hey What's your full name?"
               name="name"
               component={renderTextField}
+              variant="outlined"
               fullWidth
             />
-          </div>
-          <div>
+          </Grid>
+          <Grid item xs={12}>
             <Field
               label="Which Country are you from?"
               name="country"
               component={renderTextField}
+              variant="outlined"
+              fullWidth
             />
-          </div>
-          <div>
+          </Grid>
+          <Grid item xs={12}>
             <Field
               label="What's your email"
               name="email"
               component={renderTextField}
+              variant="outlined"
+              fullWidth
             />
-          </div>
-          <div>
+          </Grid>
+          <Grid item xs={12}>
             <Field
               label="Enter the password"
               name="password"
               type="password"
               component={renderTextField}
+              variant="outlined"
               fullWidth
             />
-          </div>
-          <div>
+          </Grid>
+          <Grid item xs={12}>
             <Field
               label="Confirm the password"
               name="confirm_password"
               type="password"
               component={renderTextField}
+              variant="outlined"
+              fullWidth
             />
-          </div>
-          <div>
+          </Grid>
+          <Grid item xs={12}>
             <Field
               label="Cool, now what's the name of the Gym?"
               name="gym_name"
               component={renderTextField}
+              variant="outlined"
+              fullWidth
             />
-          </div>
-          <div>
+          </Grid>
+          <Grid item xs={12}>
             <Field
               label="How did you meet us?"
               name="how_meet_us"
               component={renderTextField}
+              variant="outlined"
+              fullWidth
             />
-          </div>
+          </Grid>
           <div className="box-footer">
             <button type="submit" className="btn btn-primary">Submit</button>
             <Link to="/" className="btn btn-danger">Cancel</Link>
           </div>
+        </Grid>
         </form>
-      </div>
+      </Container>
     );
   }
 }
