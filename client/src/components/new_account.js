@@ -1,91 +1,168 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { Link, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { createAccount } from '../actions';
-import Auth from '../Auth/Auth.js';
+import { Link } from 'react-router-dom';
+import TextField from '@material-ui/core/TextField'
+import Grid from '@material-ui/core/Grid';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import FitnessCenter from '@material-ui/icons/FitnessCenter';
 
-class NewAccount extends Component {
-  renderField(field) {
-    const { meta: { touched, error } } = field;
-    const className = `form-group ${touched && error ? 'has-danger' : ''}`;
-    return (
-      <div className={className}>
-        <label>{field.label}</label>
-        <input
-          className="form-control"
-          type={field.type}
-          {...field.input}
-        />
-        <div className="text-help">
-          {touched ? error : ''}
-        </div>
-      </div>
-    );
-  }
 
-  onSubmit(values) {
-    const auth = new Auth();
-    this.props.createAccount(values, () => {
-      auth.login();
-    });
-  }
+const useStyles = makeStyles(theme => ({
+  '@global': {
+    body: {
+      backgroundColor: theme.palette.common.white,
+    },
+  },
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
 
-  render() {
-    const { handleSubmit } = this.props;
-    return (
-      <div className="box box-primary">
-        <div className="box-header with-border">
-          <h3 className="box-title">Create a New Account</h3>
-        </div>
-        <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
-          <div className="box-body">
+const renderTextField = ({
+  label,
+  input,
+  meta: { touched, invalid, error },
+  ...custom
+}) => (
+  <TextField
+    label={label}
+    placeholder={label}
+    error={touched && invalid}
+    helperText={touched && error}
+    {...input}
+    {...custom}
+  />
+)
+
+const AdapterLink = React.forwardRef((props, ref) => <Link innerRef={ref} {...props} />);
+
+let NewAccount = props => {
+  const { handleSubmit } = props;
+  const classes = useStyles();
+
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <FitnessCenter />
+        </Avatar>
+        <Typography component="h3" variant="h5">
+          Sign up
+        </Typography>
+        <form className={classes.form} onSubmit={handleSubmit}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
             <Field
               label="Hey What's your full name?"
               name="name"
-              component={this.renderField}
+              component={renderTextField}
+              variant="outlined"
+              fullWidth
             />
+          </Grid>
+          <Grid item xs={12}>
             <Field
               label="Which Country are you from?"
               name="country"
-              component={this.renderField}
+              component={renderTextField}
+              variant="outlined"
+              fullWidth
             />
+          </Grid>
+          <Grid item xs={12}>
             <Field
               label="What's your email"
               name="email"
-              component={this.renderField}
+              component={renderTextField}
+              variant="outlined"
+              fullWidth
             />
+          </Grid>
+          <Grid item xs={12}>
             <Field
-              label="Enter the password for your user (Must contain UPPER and lowercase letters, numbers, and total lenght of 8 digits)"
+              label="Enter the password"
               name="password"
               type="password"
-              component={this.renderField}
+              component={renderTextField}
+              variant="outlined"
+              fullWidth
             />
+          </Grid>
+          <Grid item xs={12}>
             <Field
               label="Confirm the password"
               name="confirm_password"
               type="password"
-              component={this.renderField}
+              component={renderTextField}
+              variant="outlined"
+              fullWidth
             />
+          </Grid>
+          <Grid item xs={12}>
             <Field
               label="Cool, now what's the name of the Gym?"
               name="gym_name"
-              component={this.renderField}
+              component={renderTextField}
+              variant="outlined"
+              fullWidth
             />
+          </Grid>
+          <Grid item xs={12}>
             <Field
               label="How did you meet us?"
               name="how_meet_us"
-              component={this.renderField}
+              component={renderTextField}
+              variant="outlined"
+              fullWidth
             />
-          </div>
-          <div className="box-footer">
-            <button type="submit" className="btn btn-primary">Submit</button>
-            <Link to="/" className="btn btn-danger">Cancel</Link>
-          </div>
+          </Grid>
+          <Grid item xs={6}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign Up
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            <Button 
+              component={AdapterLink} to="/"
+              fullWidth
+              variant="contained"
+              color="secondary"
+              className={classes.submit}
+              >
+              Cancel
+            </Button>
+          </Grid>
+        </Grid>
         </form>
       </div>
-    );
-  }
+    </Container>
+  );
 }
 
 function validate(values) {
@@ -118,9 +195,7 @@ function validate(values) {
   return errors
 }
 
-export default withRouter(reduxForm({
-  validate,
-  form: 'NewAccountForm'
-})(
-  connect(null, { createAccount })(NewAccount)
-));
+export default reduxForm({
+    validate,
+    form: 'NewAccountForm'
+  })(NewAccount)

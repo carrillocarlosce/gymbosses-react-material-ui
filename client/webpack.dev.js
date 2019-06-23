@@ -16,5 +16,5 @@ module.exports = merge(common, {
         new webpack.EnvironmentPlugin({
             HOST_URL: 'http://localhost:3000'
         })
-    ]
+    ],
 });

@@ -19,7 +19,5 @@ run-server:
 	@echo 'Running server.'
 	export `less .env | xargs`; go run cmd/gymbosses/main.go
 
-run-local: build-client-local run-server
-
 test:
 	go test ./...

@@ -6,6 +6,13 @@ import LaindingClientsSay from "../../components/landing/clients_say";
 import LaindingAccomplishment from "../../components/landing/accomplishment";
 import LaindingPricing from "../../components/landing/princing";
 
+import '../../../static/landing/css/animate.css';
+import '../../../static/landing/css/icomoon.css';
+import '../../../static/landing/css/bootstrap.css';
+import '../../../static/landing/fonts/flaticon/font/flaticon.css';
+import '../../../static/landing/css/style.css';
+import 'typeface-roboto'
+
 export default class LandingContainer extends Component {
   render() {
     return (

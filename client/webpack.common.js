@@ -17,7 +17,15 @@ module.exports = {
                         ]
                     }
                 }
-            }
+            },
+            {
+                test: /\.css$/i,
+                use: ['style-loader', 'css-loader'],
+            },
+            { 
+                test: /\.(png|woff|woff2|eot|ttf|svg|gif)$/, 
+                loader: 'url-loader',
+            },
         ]
     }
 };

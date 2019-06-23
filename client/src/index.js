@@ -29,7 +29,7 @@ store.subscribe(throttle(() => {
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
-      <div class="hold-transition skin-black sidebar-mini">
+      <div>
         <Switch>
           <Route
             path="/clients/new"
